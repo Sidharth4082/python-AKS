@@ -1,22 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mywebapp
+  name: nginx-deployment
+  labels:
+    app: nginx-app
+    type: front-end
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: mywebapp
+      app: nginx-app
+      type: front-end
   template:
     metadata:
-      labels:
-        app: mywebapp
+      labels: 
+        app: nginx-app
+        type: front-end
     spec:
       containers:
-      - name: mywebapp
-        image: in28min/hello-world-rest-api:0.0.3.RELEASE
-        ports: 
-        - containerPort: 3000
-        env:
-        - name: NODE_ENV
-          value: test
+      - name: nginx-container
+        image: nginx:latest
+
+---
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx-app
+    type: front-end
+  ports:
+   - port: 5000
+     targetport: 5000
+     protocol: TCP
+
