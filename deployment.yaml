@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: simple-app
-        image: victorelvis/simple-app
+        image: in28min/hello-world-rest-api:0.0.3.RELEASE
         resources:
           limits:
             memory: "256Mi"
