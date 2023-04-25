@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: simple-app
-        image: sid2104/pythonimages:push
+        image: victorelvis/simple-app
         resources:
           limits:
             memory: "256Mi"
