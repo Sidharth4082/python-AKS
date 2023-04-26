@@ -21,7 +21,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: azure-vote-front
-        image: in28min/currency-conversion:3.0.0-RELEASEs
+        image: in28min/currency-conversion:3.0.0-RELEASE
         ports:
         - containerPort: 80
         resources:
