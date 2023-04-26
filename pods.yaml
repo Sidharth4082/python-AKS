@@ -1,54 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: currency-conversion
-  name: currency-conversion
-  namespace: default
+  name: azure-vote-front
 spec:
-  replicas: 2 #CHANGE
-  minReadySeconds: 45
+  replicas: 1
   selector:
     matchLabels:
-      app: currency-conversion
+      app: azure-vote-front
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
   template:
     metadata:
       labels:
-        app: currency-conversion
+        app: azure-vote-front
     spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
       containers:
-      - image: in28min/currency-exchange:3.0.0-RELEASE #CHANGE
-        imagePullPolicy: IfNotPresent
-        name: currency-conversion
-        # env:
-        #   - name: CURRENCY_EXCHANGE_SERVICE_HOST
-        #     value: http://currency-exchange
-        
-        #     valueFrom: 
-        #       configMapKeyRef:
-        #         key: CURRENCY_EXCHANGE_SERVICE_HOST
-        #         name: currency-conversion-config-map
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
+      - name: azure-vote-front
+        image: in28min/currency-conversion:3.0.0-RELEASEs
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: REDIS
+          value: "azure-vote-back"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels: #PODS
-    app: currency-conversion
-  name: currency-conversion
-  namespace: default
+  name: azure-vote-front
 spec:
-  ports:
-  - port: 8100 #CHANGE
-    protocol: TCP
-    targetPort: 8100 #CHANGE
-  selector:
-    app: currency-conversion
-  sessionAffinity: None #CHANGE
   type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: azure-vote-front
